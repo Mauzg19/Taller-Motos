@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Taller de Motos - Frontend</title>
+  <script>window.API_ORIGIN = window.API_ORIGIN || 'http://localhost:8080';</script>
+  <script defer src="app.js"></script>
+  <style>body{font-family:Arial;margin:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px}</style>
+</head>
+<body>
+  <h1>Taller de Motos (Frontend Separado)</h1>
+  <section>
+    <h2>Crear orden</h2>
+    <form id="create-form">
+      <input name="nombreCliente" placeholder="Nombre" required />
+      <input name="telefonoCliente" placeholder="Teléfono" />
+      <input name="emailCliente" placeholder="Email" />
+      <input name="placa" placeholder="Placa" />
+      <input name="marca" placeholder="Marca" />
+      <input name="modelo" placeholder="Modelo" />
+      <input name="anio" placeholder="Año" type="number" />
+      <input name="kilometraje" placeholder="Kilometraje" type="number" />
+      <input name="motivoIngreso" placeholder="Motivo" />
+      <input name="diagnosticoInicial" placeholder="Diagnóstico" />
+      <button type="submit">Crear</button>
+    </form>
+  </section>
+  <section>
+    <h2>Órdenes</h2>
+    <table id="ordenes-table">
+      <thead><tr><th>ID</th><th>Orden</th><th>Cliente</th><th>Moto</th><th>Motivo</th><th>Diagnóstico</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</body>
+</html>
