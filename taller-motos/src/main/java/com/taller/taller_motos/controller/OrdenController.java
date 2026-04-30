@@ -69,4 +69,19 @@ public class OrdenController {
     public SseEmitter streamUpdates(@RequestParam String user, @RequestParam String roles) {
         return ordenService.registerEmitter(user, roles);
     }
+
+    @GetMapping("/numero/{numeroOrden}")
+    public Optional<Orden> findByNumeroOrden(@PathVariable String numeroOrden) {
+        return ordenService.findByNumeroOrden(numeroOrden);
+    }
+
+    @GetMapping("/{id}/historial")
+    public List<String> getHistorial(@PathVariable Long id) {
+        return ordenService.getHistorialActualizaciones(id);
+    }
+
+    @GetMapping(value = "/client-stream/{numeroOrden}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamForClient(@PathVariable String numeroOrden) {
+        return ordenService.registerClientEmitter(numeroOrden);
+    }
 }
