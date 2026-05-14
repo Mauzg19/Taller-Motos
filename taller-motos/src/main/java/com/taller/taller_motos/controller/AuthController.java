@@ -1,10 +1,14 @@
 package com.taller.taller_motos.controller;
 
-import com.taller.taller_motos.model.Role;
-import com.taller.taller_motos.model.Usuario;
+import com.taller.taller_motos.model.*;
 import com.taller.taller_motos.repository.UsuarioRepository;
+import com.taller.taller_motos.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +25,53 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            // Autenticar usuario
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
+            );
+
+            // Obtener usuario de la base de datos
+            Usuario usuario = usuarioRepository.findByUsername(loginRequest.getUsername()).orElse(null);
+            if (usuario == null) {
+                return ResponseEntity.status(401).body(null);
+            }
+
+            // Generar token JWT
+            String token = jwtUtil.generateToken(usuario.getUsername(), usuario.getRole().name());
+
+            // Crear respuesta
+            LoginResponse.UserDTO userDTO = LoginResponse.UserDTO.builder()
+                    .username(usuario.getUsername())
+                    .nombre(usuario.getNombre())
+                    .email(usuario.getEmail())
+                    .role(usuario.getRole().name())
+                    .build();
+
+            LoginResponse response = LoginResponse.builder()
+                    .token(token)
+                    .tokenType("Bearer")
+                    .expiresIn(86400000L) // 24 horas
+                    .user(userDTO)
+                    .build();
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(null);
+        }
+    }
 
     @GetMapping("/me")
     public Map<String, Object> me(Principal principal) {

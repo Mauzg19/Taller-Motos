@@ -1,9 +1,12 @@
 package com.taller.taller_motos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Servicio {
 
     @Id
@@ -27,10 +30,12 @@ public class Servicio {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tecnico_id")
+    @JsonIgnore
     private Usuario tecnico;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_id")
+    @JsonIgnore
     private Orden orden;
 
     public Servicio() {}

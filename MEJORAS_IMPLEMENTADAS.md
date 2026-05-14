@@ -166,20 +166,70 @@ Endpoints adicionales para órdenes:
 
 ## 🚀 Cómo Ejecutar el Proyecto
 
-### Backend
+### Prerrequisitos
+- Java 17 o superior
+- Maven 3.6+
+- Node.js 18+ y npm
+- MySQL 8.0+ (o configurar H2 en `application.properties`)
+
+### Paso 1: Configurar Base de Datos
+```sql
+CREATE DATABASE tallermotos;
+```
+
+### Paso 2: Configurar Backend
+```bash
+cd taller-motos
+# Copiar archivo de ejemplo y editar con tus credenciales
+cp .env.example .env
+
+# Ejecutar con variables de entorno (opcional)
+export TWILIO_ACCOUNT_SID=tu_account_sid
+export TWILIO_AUTH_TOKEN=tu_auth_token
+```
+
+### Paso 3: Iniciar Backend
 ```bash
 cd taller-motos
 ./mvnw spring-boot:run
 ```
 El backend correrá en `http://localhost:8080`
 
-### Frontend
+### Paso 4: Iniciar Frontend
 ```bash
 cd frontend-react
 npm install
 npm run dev
 ```
-El frontend correrá en `http://localhost:3000`
+El frontend correrá en `http://localhost:5173` (Vite) o `http://localhost:3000`
+
+---
+
+## 📝 Comandos Útiles
+
+### Backend
+```bash
+# Compilar
+./mvnw clean compile
+
+# Ejecutar tests
+./mvnw test
+
+# Empaquetar para producción
+./mvnw clean package
+```
+
+### Frontend
+```bash
+# Desarrollo
+npm run dev
+
+# Build de producción
+npm run build
+
+# Preview del build
+npm run preview
+```
 
 ---
 
