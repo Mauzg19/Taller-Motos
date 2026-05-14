@@ -53,13 +53,47 @@ const Reports = () => {
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
 
   const handleExportPDF = () => {
-    toast.success('Generando PDF...');
-    // In production, this would call the backend API
+    toast.success('Preparando vista de impresión...');
+    setTimeout(() => {
+      window.print();
+    }, 500);
   };
 
   const handleExportExcel = () => {
-    toast.success('Generando Excel...');
-    // In production, this would call the backend API
+    toast.success('Descargando reporte...');
+    
+    let dataToExport = [];
+    let headers = [];
+    let filename = `reporte_${reportType}.csv`;
+
+    if (reportType === 'revenue') {
+      headers = ['Mes', 'Ingresos', 'Gastos', 'Ganancia'];
+      dataToExport = revenueData.map(d => [d.mes, d.ingresos, d.gastos, d.ganancia]);
+    } else if (reportType === 'services') {
+      headers = ['Servicio', 'Cantidad', 'Ingresos'];
+      dataToExport = servicesData.map(d => [d.nombre, d.cantidad, d.ingresos]);
+    } else if (reportType === 'parts') {
+      headers = ['Repuesto', 'Cantidad Utilizada'];
+      dataToExport = partsData.map(d => [d.nombre, d.count]);
+    } else if (reportType === 'technicians') {
+      headers = ['Técnico', 'Eficiencia %', 'Órdenes'];
+      dataToExport = technicianData.map(d => [d.nombre, d.eficiencia, d.ordenes]);
+    }
+
+    const csvContent = [
+      headers.join(','),
+      ...dataToExport.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (

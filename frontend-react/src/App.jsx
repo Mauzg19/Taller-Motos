@@ -10,6 +10,9 @@ import Appointments from './pages/Appointments';
 import Inventory from './pages/Inventory';
 import Reports from './pages/Reports';
 import ClientPortal from './pages/ClientPortal';
+import LoyaltyPoints from './pages/LoyaltyPoints';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -86,6 +89,21 @@ function AppRoutes() {
       <Route path="/reportes" element={
         <ProtectedRoute>
           <Reports />
+        </ProtectedRoute>
+      } />
+      <Route path="/mis-puntos" element={
+        <ProtectedRoute>
+          <LoyaltyPoints />
+        </ProtectedRoute>
+      } />
+      <Route path="/perfil" element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      } />
+      <Route path="/configuracion" element={
+        <ProtectedRoute>
+          <Settings />
         </ProtectedRoute>
       } />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />

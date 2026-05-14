@@ -33,6 +33,10 @@ public class Cliente {
     @OneToMany(mappedBy = "clienteReferidor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Referido> referidos = new ArrayList<>();
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    private Usuario usuario;
+
     public Cliente() {
         this.fechaRegistro = LocalDateTime.now();
     }
@@ -65,4 +69,6 @@ public class Cliente {
     public void setReferidos(List<Referido> referidos) { this.referidos = referidos; }
     public boolean isArchivado() { return archivado; }
     public void setArchivado(boolean archivado) { this.archivado = archivado; }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }

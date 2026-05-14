@@ -1,16 +1,38 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const menuItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: '📊' },
-  { path: '/ordenes', label: 'Órdenes', icon: '📋' },
-  { path: '/clientes', label: 'Clientes', icon: '👥' },
-  { path: '/citas', label: 'Citas', icon: '📅' },
-  { path: '/inventario', label: 'Inventario', icon: '📦' },
-  { path: '/reportes', label: 'Reportes', icon: '📈' },
-];
-
 const Sidebar = ({ user }) => {
+  const role = user?.role || 'CLIENTE';
+  
+  // Roles Administrativos (Admin y Recepción ven todo)
+  const isStaff = role === 'ADMIN' || role === 'RECEPCION';
+  // Rol Técnico (Mecánico ve solo lo operativo)
+  const isTecnico = role === 'TECNICO' || role === 'MECANICO';
+
+  let menuItems = [];
+
+  if (isStaff) {
+    menuItems = [
+      { path: '/dashboard', label: 'Dashboard', icon: '📊' },
+      { path: '/ordenes', label: 'Órdenes', icon: '📋' },
+      { path: '/clientes', label: 'Clientes', icon: '👥' },
+      { path: '/citas', label: 'Citas', icon: '📅' },
+      { path: '/inventario', label: 'Inventario', icon: '📦' },
+      { path: '/reportes', label: 'Reportes', icon: '📈' },
+    ];
+  } else if (isTecnico) {
+    menuItems = [
+      { path: '/dashboard', label: 'Mi Taller', icon: '🛠️' },
+      { path: '/ordenes', label: 'Órdenes de Trabajo', icon: '📋' },
+      { path: '/citas', label: 'Citas Programadas', icon: '📅' },
+    ];
+  } else {
+    menuItems = [
+      { path: '/dashboard', label: 'Mis Motos', icon: '🏍️' },
+      { path: '/citas', label: 'Mis Citas', icon: '📅' },
+      { path: '/mis-puntos', label: 'Mis Puntos', icon: '🏆' },
+    ];
+  }
   return (
     <aside className="w-64 bg-gray-900 text-white flex flex-col">
       {/* Logo */}
@@ -28,9 +50,9 @@ const Sidebar = ({ user }) => {
             {user?.username?.charAt(0).toUpperCase() || 'U'}
           </div>
           <div>
-            <p className="text-sm font-medium">{user?.username || 'Usuario'}</p>
+            <p className="text-sm font-medium">{user?.nombre || user?.username || 'Usuario'}</p>
             <p className="text-xs text-gray-400 capitalize">
-              {user?.roles?.[0]?.replace('ROLE_', '') || 'Admin'}
+              {role.toLowerCase()}
             </p>
           </div>
         </div>

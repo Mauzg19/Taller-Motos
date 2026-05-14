@@ -116,13 +116,36 @@ public class DataLoader implements CommandLineRunner {
         }
 
         if (usuarioRepository.findByUsername("juan@example.com").isEmpty()) {
-            Usuario cliente = new Usuario();
-            cliente.setUsername("juan@example.com");
-            cliente.setPassword(passwordEncoder.encode("cliente123"));
-            cliente.setNombre("Juan Pérez");
-            cliente.setEmail("juan@example.com");
-            cliente.setRole(Role.CLIENTE);
-            usuarioRepository.save(cliente);
+            // 1. Crear el Usuario para el login
+            Usuario usuarioJuan = new Usuario();
+            usuarioJuan.setUsername("juan@example.com");
+            usuarioJuan.setPassword(passwordEncoder.encode("cliente123"));
+            usuarioJuan.setNombre("Juan Pérez");
+            usuarioJuan.setEmail("juan@example.com");
+            usuarioJuan.setTelefono("3001234567");
+            usuarioJuan.setRole(Role.CLIENTE);
+            
+            // 2. Crear el Cliente (entidad de negocio)
+            Cliente clienteJuan = new Cliente();
+            clienteJuan.setNombre("Juan Pérez");
+            clienteJuan.setEmail("juan@example.com");
+            clienteJuan.setTelefono("3001234567");
+            clienteJuan.setPuntos(450);
+            
+            // 3. Vincularlos
+            clienteJuan.setUsuario(usuarioJuan);
+            
+            // 4. Guardar (Usando el servicio que ya esta inyectado)
+            clienteService.saveCliente(clienteJuan);
+            
+            // 5. Agregarle una moto para que vea algo en su dashboard
+            Moto motoJuan = new Moto();
+            motoJuan.setMarca("Yamaha");
+            motoJuan.setModelo("MT-07");
+            motoJuan.setPlaca("ABC-123");
+            motoJuan.setAnio(2023);
+            motoJuan.setCliente(clienteJuan);
+            motoService.saveMoto(motoJuan);
         }
     }
 }

@@ -15,6 +15,8 @@ const Inventory = () => {
     codigoInterno: '',
     codigoProveedor: '',
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   const mockInventory = [
     { id: 1, nombre: 'Aceite Motul 5W40', categoria: 'Aceites', cantidad: 24, precio: 45000, costoCompra: 30000, stockMinimo: 10, codigoInterno: 'ACE-001' },
@@ -29,20 +31,39 @@ const Inventory = () => {
     setInventory(mockInventory);
   }, []);
 
-  const handleAddItem = async (e) => {
+  const handleOpenModal = (item = null) => {
+    if (item) {
+      setIsEditing(true);
+      setEditingId(item.id);
+      setNewItem({ ...item });
+    } else {
+      setIsEditing(false);
+      setEditingId(null);
+      setNewItem({
+        nombre: '',
+        categoria: '',
+        cantidad: 1,
+        precio: 0,
+        costoCompra: 0,
+        stockMinimo: 5,
+        codigoInterno: '',
+        codigoProveedor: '',
+      });
+    }
+    setShowModal(true);
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    toast.success('Repuesto agregado al inventario');
+    if (isEditing) {
+      setInventory(inventory.map(item => item.id === editingId ? { ...newItem, id: editingId } : item));
+      toast.success('Repuesto actualizado correctamente');
+    } else {
+      const id = inventory.length + 1;
+      setInventory([...inventory, { ...newItem, id }]);
+      toast.success('Repuesto agregado al inventario');
+    }
     setShowModal(false);
-    setNewItem({
-      nombre: '',
-      categoria: '',
-      cantidad: 1,
-      precio: 0,
-      costoCompra: 0,
-      stockMinimo: 5,
-      codigoInterno: '',
-      codigoProveedor: '',
-    });
   };
 
   const filteredInventory = inventory.filter((item) => {
@@ -60,7 +81,7 @@ const Inventory = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-800">Inventario de Repuestos</h2>
         <button
-          onClick={() => setShowModal(true)}
+          onClick={() => handleOpenModal()}
           className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
         >
           + Nuevo Repuesto
@@ -173,7 +194,12 @@ const Inventory = () => {
                   )}
                 </td>
                 <td className="py-4 px-4">
-                  <button className="text-primary-600 hover:text-primary-700 font-medium text-sm mr-3">Editar</button>
+                  <button 
+                    onClick={() => handleOpenModal(item)}
+                    className="text-primary-600 hover:text-primary-700 font-medium text-sm mr-3"
+                  >
+                    Editar
+                  </button>
                 </td>
               </tr>
             ))}
@@ -185,8 +211,10 @@ const Inventory = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Nuevo Repuesto</h3>
-            <form onSubmit={handleAddItem} className="space-y-4">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">
+              {isEditing ? 'Editar Repuesto' : 'Nuevo Repuesto'}
+            </h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
@@ -279,7 +307,7 @@ const Inventory = () => {
                   type="submit"
                   className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700"
                 >
-                  Agregar
+                  {isEditing ? 'Actualizar' : 'Agregar'}
                 </button>
               </div>
             </form>

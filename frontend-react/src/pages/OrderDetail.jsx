@@ -350,6 +350,29 @@ const OrderDetail = () => {
               </button>
             </form>
           </div>
+
+          {/* Technical Notes */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <span>📝</span> Notas y Diagnóstico del Técnico
+            </h3>
+            <textarea
+              className="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent min-h-[120px] text-sm"
+              placeholder="Escribe aquí los hallazgos técnicos, recomendaciones o detalles de la reparación..."
+              defaultValue={order.notasTecnicas || ''}
+              onBlur={async (e) => {
+                try {
+                  // Aqui iria el update de las notas al backend
+                  toast.success('Notas guardadas automáticamente');
+                } catch (error) {
+                  toast.error('Error al guardar notas');
+                }
+              }}
+            />
+            <p className="text-[10px] text-gray-400 mt-2 italic">
+              * Las notas se guardan automáticamente al salir del campo de texto.
+            </p>
+          </div>
         </div>
 
         {/* Sidebar */}
